@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace DSW_I_Grupo_2_CRM.Controllers
+namespace CibertecDemo.Controllers
 {
     public class HomeController : Controller
     {

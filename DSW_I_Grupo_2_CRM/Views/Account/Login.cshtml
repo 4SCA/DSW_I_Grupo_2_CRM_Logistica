@@ -1,0 +1,37 @@
+﻿@model DSW_I_Grupo_2_CRM.DTOs.UsuarioLoginDto
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-sm" style="width: 100%; max-width: 350px;">
+        
+        <h4 class="text-center mb-4">Iniciar Sesión</h4>
+
+        <form asp-action="Login" method="post">
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input asp-for="Correo" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Clave</label>
+                <input asp-for="Clave" type="password" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+        </form>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="text-danger text-center mt-3">
+                @ViewBag.Error
+            </div>
+        }
+
+        <div class="text-center mt-3">
+            <small>
+                ¿No tienes cuenta?
+                <a asp-action="Register">Regístrate</a>
+            </small>
+        </div>
+
+    </div>
+</div>

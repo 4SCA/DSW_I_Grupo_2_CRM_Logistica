@@ -1,0 +1,40 @@
+﻿@model DSW_I_Grupo_2_CRM.DTOs.UsuarioCreateDto
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-sm" style="width: 100%; max-width: 380px;">
+        
+        <h4 class="text-center mb-4">Crear Cuenta</h4>
+
+        <form asp-action="Register" method="post">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input asp-for="Nombre" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input asp-for="Correo" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Clave</label>
+                <input asp-for="Clave" type="password" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Rol</label>
+                <input asp-for="IdRol" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Registrar</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <small>
+                ¿Ya tienes cuenta?
+                <a asp-action="Login">Inicia sesión</a>
+            </small>
+        </div>
+
+    </div>
+</div>
