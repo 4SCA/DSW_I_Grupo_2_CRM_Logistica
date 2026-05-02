@@ -14,8 +14,6 @@ namespace DSW_I_Grupo_2_CRM.Controllers
             _service = service;
         }
 
-        // ================= LOGIN =================
-
         [HttpGet]
         public IActionResult Login()
         {
@@ -42,8 +40,6 @@ namespace DSW_I_Grupo_2_CRM.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // ================= REGISTER =================
-
         [HttpGet]
         public IActionResult Register()
         {
@@ -60,8 +56,6 @@ namespace DSW_I_Grupo_2_CRM.Controllers
 
             return RedirectToAction("Login");
         }
-
-        // ================= LOGOUT =================
 
         public IActionResult Logout()
         {

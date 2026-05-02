@@ -22,7 +22,8 @@ namespace DSW_I_Grupo_2_CRM.Services
         {
             var claims = new[]
             {
-                new Claim("id", usuario.IdUsuario.ToString())
+                new Claim("id", usuario.IdUsuario.ToString()),
+                new Claim(ClaimTypes.Role, usuario.RolNombre)
             };
 
             var key = config["Jwt:Key"];

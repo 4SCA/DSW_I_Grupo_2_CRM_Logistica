@@ -41,7 +41,8 @@ namespace DSW_I_Grupo_2_CRM.Data.Repositories
                             IdUsuario = reader.GetInt32(0),
                             Nombre = reader.GetString(1),
                             Correo = reader.GetString(2),
-                            Estado = reader.GetString(5),
+                            RolNombre = reader.GetString(4),
+                            Estado = reader.GetString(5)
                         };
                     }
                 }

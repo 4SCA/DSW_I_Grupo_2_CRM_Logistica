@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<AccountRepository>();
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<BloquesRepository>();
 builder.Services.AddSession();
 
 
@@ -57,5 +58,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers();
 
 app.Run();
