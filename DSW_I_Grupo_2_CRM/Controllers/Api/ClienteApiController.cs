@@ -7,10 +7,10 @@ namespace DSW_I_Grupo_2_CRM.Controllers.Api
 {
     [ApiController]
     [Route("api/cliente")]
-    [Authorize] 
-    public class ClienteApiController : ControllerBase 
+    [Authorize]
+    public class ClienteApiController : ControllerBase
     {
-       
+
 
         private readonly ClienteRepository _repo;
 
@@ -31,7 +31,7 @@ namespace DSW_I_Grupo_2_CRM.Controllers.Api
 
 
         // ==================== CREAR ====================
-        [HttpPost]
+        [HttpPost("crear")]
         public async Task<IActionResult> Crear([FromBody] ClienteCreateDto dto)
         {
             if (!ModelState.IsValid)
@@ -47,12 +47,12 @@ namespace DSW_I_Grupo_2_CRM.Controllers.Api
                 return BadRequest(new { mensaje = ex.Message });
             }
         }
+        //Ejecuta
 
-
-        [HttpGet("{id}")]   
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
-            int idUsuario = ObtenerIdUsuario(); 
+            int idUsuario = ObtenerIdUsuario();
 
             var cliente = await _repo.ObtenerPorIdAsync(id, idUsuario);
 
@@ -62,13 +62,13 @@ namespace DSW_I_Grupo_2_CRM.Controllers.Api
             return Ok(cliente);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Listar()
+        [HttpGet("listar-general")]
+        public async Task<IActionResult> ListarGeneral()
         {
-            int idUsuario = ObtenerIdUsuario();
-            var clientes = await _repo.ListarClientesAsync(idUsuario);
+            var clientes = await _repo.ListarClientesGeneralAsync();
             return Ok(clientes);
         }
+        //Ejecuta
 
         [HttpGet("paginado")]
         public async Task<IActionResult> ListarPaginado([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
@@ -77,7 +77,7 @@ namespace DSW_I_Grupo_2_CRM.Controllers.Api
 
             if (page < 1) page = 1;
             if (pageSize < 1) pageSize = 10;
-            if (pageSize > 50) pageSize = 50; 
+            if (pageSize > 50) pageSize = 50;
 
             var (clientes, totalRegistros) = await _repo.ListarClientesPaginadoAsync(page, pageSize, idUsuario);
 
@@ -90,8 +90,8 @@ namespace DSW_I_Grupo_2_CRM.Controllers.Api
                 pageSize
             });
         }
+        //Ejecuta
 
-        
 
         // ==================== ACTUALIZAR ====================
         [HttpPut("{id}")]
@@ -111,21 +111,20 @@ namespace DSW_I_Grupo_2_CRM.Controllers.Api
                 return BadRequest(new { mensaje = ex.Message });
             }
         }
+        //Ejecuta
 
-        // ==================== ACTUALIZAR ESTADO ====================
         [HttpPatch("{id}/estado")]
-        public async Task<IActionResult> ActualizarEstado(int id, [FromBody] ClienteEstadoDto dto)
+        public async Task<IActionResult> ActualizarEstado(int id)
         {
-            if (id != dto.IdCliente)
-                return BadRequest(new { mensaje = "El ID no coincide" });
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             try
             {
                 int idUsuario = ObtenerIdUsuario();
-                await _repo.ActualizarEstadoClienteAsync(dto, idUsuario);
+
+                var ok = await _repo.DesactivarClienteAsync(id, idUsuario);
+
+                if (!ok)
+                    return BadRequest(new { mensaje = "No se pudo desactivar el cliente o no tienes permisos" });
+
                 return Ok(new { mensaje = "Estado actualizado correctamente" });
             }
             catch (Exception ex)
@@ -133,5 +132,6 @@ namespace DSW_I_Grupo_2_CRM.Controllers.Api
                 return BadRequest(new { mensaje = ex.Message });
             }
         }
+
     }
 }

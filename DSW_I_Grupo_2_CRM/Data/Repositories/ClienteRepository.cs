@@ -12,7 +12,7 @@ namespace DSW_I_Grupo_2_CRM.Data.Repositories
             _connectionString = config.GetConnectionString("Conn");
         }
 
-        public async Task CrearClienteAsync (ClienteCreateDto dto)
+        public async Task CrearClienteAsync(ClienteCreateDto dto)
         {
             using (var cn = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand("sp_CrearCliente", cn))
@@ -30,17 +30,17 @@ namespace DSW_I_Grupo_2_CRM.Data.Repositories
 
                 await cn.OpenAsync();
                 var id = await cmd.ExecuteNonQueryAsync();
-                
+
             }
-            
+
 
         }
 
-        
+
         public async Task<ClienteResponseDTO?> ObtenerPorIdAsync(int idCliente, int idUsuario)
         {
-            
-            
+
+
             using (var cn = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand("sp_ObtenerClientePorId", cn))
             {
@@ -57,7 +57,7 @@ namespace DSW_I_Grupo_2_CRM.Data.Repositories
                     {
                         return new ClienteResponseDTO
                         {
-                            
+
                             IdCliente = reader.GetInt32(reader.GetOrdinal("id_cliente")),
                             TipoCliente = reader.GetString(reader.GetOrdinal("tipo_cliente")),
                             Ruc = reader.IsDBNull(reader.GetOrdinal("ruc")) ? null : reader.GetString(reader.GetOrdinal("ruc")),
@@ -74,7 +74,7 @@ namespace DSW_I_Grupo_2_CRM.Data.Repositories
 
         public async Task ActualizarClienteAsync(int idCliente, ClienteUpdateDto dto, int idUsuario)
         {
-            
+
 
             using (var cn = new SqlConnection(_connectionString))
             using (var cmd = new SqlCommand("sp_EditarCliente", cn))
@@ -97,16 +97,14 @@ namespace DSW_I_Grupo_2_CRM.Data.Repositories
         }
 
 
-        public async Task<List<ClienteResponseDTO>> ListarClientesAsync(int idUsuario)
+        public async Task<List<ClienteResponseDTO>> ListarClientesGeneralAsync()
         {
             var lista = new List<ClienteResponseDTO>();
-            
 
             using (var cn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("sp_ListarClientes", cn)) 
+            using (var cmd = new SqlCommand("sp_ListarClientesGeneral", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@id_usuario", idUsuario);
 
                 await cn.OpenAsync();
 
@@ -114,20 +112,18 @@ namespace DSW_I_Grupo_2_CRM.Data.Repositories
                 {
                     while (await reader.ReadAsync())
                     {
-                        var cliente = new ClienteResponseDTO
+                        lista.Add(new ClienteResponseDTO
                         {
                             IdCliente = reader.GetInt32(reader.GetOrdinal("id_cliente")),
                             TipoCliente = reader.GetString(reader.GetOrdinal("tipo_cliente")),
                             Ruc = reader.IsDBNull(reader.GetOrdinal("ruc")) ? null : reader.GetString(reader.GetOrdinal("ruc")),
                             RazonSocial = reader.GetString(reader.GetOrdinal("razon_social")),
-                            Contacto= reader.IsDBNull(reader.GetOrdinal("contacto")) ? null : reader.GetString(reader.GetOrdinal("contacto")),
+                            Contacto = reader.IsDBNull(reader.GetOrdinal("contacto")) ? null : reader.GetString(reader.GetOrdinal("contacto")),
                             CargoContacto = reader.IsDBNull(reader.GetOrdinal("cargo_contacto")) ? null : reader.GetString(reader.GetOrdinal("cargo_contacto")),
                             Telefono = reader.IsDBNull(reader.GetOrdinal("telefono")) ? null : reader.GetString(reader.GetOrdinal("telefono")),
                             Correo = reader.IsDBNull(reader.GetOrdinal("correo")) ? null : reader.GetString(reader.GetOrdinal("correo")),
                             Estado = reader.GetString(reader.GetOrdinal("estado"))
-                        };
-
-                        lista.Add(cliente);
+                        });
                     }
                 }
             }
@@ -135,21 +131,20 @@ namespace DSW_I_Grupo_2_CRM.Data.Repositories
             return lista;
         }
 
-        public async Task ActualizarEstadoClienteAsync(ClienteEstadoDto dto, int idUsuario)
+        public async Task<bool> DesactivarClienteAsync(int idCliente, int idUsuario)
         {
-            
-
             using (var cn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("sp_ActualizarEstadoCliente", cn))
+            using (var cmd = new SqlCommand("sp_DesactivarCliente", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@id_cliente", dto.IdCliente);
+                cmd.Parameters.AddWithValue("@id_cliente", idCliente);
                 cmd.Parameters.AddWithValue("@id_usuario", idUsuario);
-                cmd.Parameters.AddWithValue("@estado", dto.Estado);
 
                 await cn.OpenAsync();
                 await cmd.ExecuteNonQueryAsync();
+
+                return true;
             }
         }
 
